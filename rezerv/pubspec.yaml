@@ -35,6 +35,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  firebase_core: ^2.30.0
+  firebase_auth: ^4.19.2
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +87,12 @@ flutter:
     - family: PoppinsMedium
       fonts:
         - asset: assets/fonts/Poppins-Medium.ttf
+    - family: PoppinsSemiBold
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+    - family: PoppinsBlack
+      fonts:
+        - asset: assets/fonts/Poppins-Black.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "412384698396",
+    "project_id": "rezerv---hotel-booking-app",
+    "storage_bucket": "rezerv---hotel-booking-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412384698396:android:88ed108e956012a4d1ffd9",
+        "android_client_info": {
+          "package_name": "com.example.rezerv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArR4T6QeT02zc0mqlIqavbuCEwiTG2LU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
