@@ -8,6 +8,34 @@ const TextStyle descriptionStyle = TextStyle(
   fontFamily: 'PoppinsRegular',
 );
 
+const TextStyle mainTextStyle = TextStyle(
+  fontSize: 30,
+  color: mainBlue,
+  fontWeight: FontWeight.w600,
+  fontFamily: 'PoppinsSemiBold',
+);
+
+const TextStyle secondaryTextStyle = TextStyle(
+  fontSize: 20,
+  color: bgBlack,
+  fontWeight: FontWeight.w600,
+  fontFamily: 'PoppinsSemiBold',
+);
+
+const TextStyle btnTextStyle = TextStyle(
+  fontSize: 25,
+  color: bgBlack,
+  fontWeight: FontWeight.w400,
+  fontFamily: 'PoppinsRegular',
+);
+
+const TextStyle regularTextStyle = TextStyle(
+  fontSize: 18,
+  color: bgBlack,
+  fontWeight: FontWeight.w400,
+  fontFamily: 'PoppinsRegular',
+);
+
 const InputDecoration inputFieldDecoration = InputDecoration(
   hintText: "Email",
   hintStyle: TextStyle(
