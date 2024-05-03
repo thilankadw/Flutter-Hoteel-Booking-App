@@ -1,5 +1,8 @@
+// Import required packages and files
 import 'package:flutter/material.dart';
 import 'package:rezerv/components/hotelcard.dart';
+import 'package:rezerv/screens/otherscreens/filter.dart';
+import 'package:rezerv/screens/otherscreens/hoteldetails.dart'; // Import your HotelDetailsPage file
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
 
@@ -47,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Your existing UI code...
                   const SizedBox(height: 10),
                   const Text(
                     'Location',
@@ -81,13 +85,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: hotels.length,
                       itemBuilder: (BuildContext context, int index) {
                         final hotel = hotels[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 20.0),
-                          child: HotelCard(
-                            imageUrl: hotel['imageUrl'],
-                            rating: hotel['rating'],
-                            hotelName: hotel['hotelName'],
-                            price: hotel['price'],
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigate to HotelDetailsPage when a hotel card is tapped
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HotelDetailsPage(
+                                    // imageUrl: hotel['imageUrl'],
+                                    // rating: hotel['rating'],
+                                    // hotelName: hotel['hotelName'],
+                                    // price: hotel['price'],
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: HotelCard(
+                              imageUrl: hotel['imageUrl'],
+                              rating: hotel['rating'],
+                              hotelName: hotel['hotelName'],
+                              price: hotel['price'],
+                            ),
                           ),
                         );
                       },
@@ -100,7 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(mainBlue),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FilterHotelsPage(),
+                          ),
+                        );
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

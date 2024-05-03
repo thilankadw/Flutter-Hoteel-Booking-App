@@ -58,3 +58,27 @@ const InputDecoration inputFieldDecoration = InputDecoration(
     ),
   ),
 );
+
+const InputDecoration filterFormInputDecoration = InputDecoration(
+  hintText: "Min Price",
+  hintStyle: TextStyle(
+    color: textLight,
+    fontSize: 15,
+    fontFamily: 'PoppinsRegular',
+  ),
+  fillColor: white,
+  contentPadding:
+      EdgeInsets.symmetric(vertical: 10.0), // Adjust the height here
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: bgBlack, width: 1),
+    borderRadius: BorderRadius.all(
+      Radius.circular(100),
+    ),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: mainBlue, width: 2),
+    borderRadius: BorderRadius.all(
+      Radius.circular(100),
+    ),
+  ),
+);
