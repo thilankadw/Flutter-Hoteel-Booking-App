@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
+import 'package:rezerv/models/UserModel.dart';
+import 'package:rezerv/services/auth.dart';
+import 'package:rezerv/services/booking.dart'; // Import the BookingServices class
 
 class BookingPage extends StatefulWidget {
+  final String hotelId;
+  final String priceperNight;
+  final String hotelName;
+  final String location;
+
+  const BookingPage({
+    required this.hotelId,
+    required this.priceperNight,
+    required this.hotelName,
+    required this.location,
+  });
+
   @override
   _BookingPageState createState() => _BookingPageState();
 }
@@ -13,17 +28,30 @@ class _BookingPageState extends State<BookingPage> {
   int _numberOfPersons = 1;
   int _numberOfRooms = 1;
 
+  late String _userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUser();
+  }
+
+  Future<void> _getCurrentUser() async {
+    AuthServices _auth = AuthServices();
+    UserModel? user = await _auth.getCurrentUser();
+    if (user != null) {
+      setState(() {
+        _userId = user.uid;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          style: const ButtonStyle(
-            iconSize: MaterialStatePropertyAll(25.0),
-            iconColor: MaterialStatePropertyAll(white),
-            backgroundColor: MaterialStatePropertyAll(mainBlue),
-          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -40,16 +68,19 @@ class _BookingPageState extends State<BookingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Hotel Name and Price per night
+                // Replace 'Hotel Name' and '\$100' with actual values
                 Text(
                   'Hotel Name',
                   style: secondaryTextStyle.copyWith(fontSize: 25),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Price per night: \$100', // Replace with actual price
+                Text(
+                  'Price per night: \$${widget.priceperNight}', // Replace with actual price
                   style: regularTextStyle,
                 ),
                 const SizedBox(height: 40),
+                // Check-in Date
                 const Text(
                   'Check-in Date',
                   style: secondaryTextStyle,
@@ -67,6 +98,7 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                 ),
                 SizedBox(height: 20),
+                // Check-out Date
                 const Text(
                   'Check-out Date',
                   style: secondaryTextStyle,
@@ -84,6 +116,7 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                 ),
                 SizedBox(height: 40),
+                // Number of Persons Dropdown
                 const Text(
                   'Number of Persons',
                   style: secondaryTextStyle,
@@ -107,6 +140,7 @@ class _BookingPageState extends State<BookingPage> {
                   }),
                 ),
                 SizedBox(height: 20),
+                // Number of Rooms Dropdown
                 const Text(
                   'Number of Rooms',
                   style: secondaryTextStyle,
@@ -129,35 +163,27 @@ class _BookingPageState extends State<BookingPage> {
                     );
                   }),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: 40),
+                // Add Booking Button
                 Padding(
-                  padding: const EdgeInsets.all(
-                      8.0), // Adjust the padding value as needed
+                  padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: 55.0,
-                    width: double
-                        .infinity, // Makes the button take up the full width
+                    width: double.infinity,
                     child: ElevatedButton(
+                      onPressed: _addBooking,
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            mainBlue), // Example button color
+                        backgroundColor: MaterialStateProperty.all(mainBlue),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                30.0), // Adjust the border radius as needed
+                            borderRadius: BorderRadius.circular(30.0),
                           ),
                         ),
-                        // Remove fixedSize property to allow full width
                       ),
-                      onPressed: () {
-                        // Implement booking functionality
-                      },
                       child: Text(
                         'Add Booking',
-                        style: btnTextStyle.copyWith(
-                            color:
-                                white), // Make sure to define your btnTextStyle
+                        style: btnTextStyle.copyWith(color: white),
                       ),
                     ),
                   ),
@@ -216,5 +242,54 @@ class _BookingPageState extends State<BookingPage> {
         );
       }
     }
+  }
+
+  void _addBooking() {
+    BookingServices().createBooking(
+      userId: _userId,
+      hotelId: widget.hotelId,
+      hotelName: widget.hotelName,
+      location: widget.location,
+      checkInDate: _checkInDate!,
+      checkOutDate: _checkOutDate!,
+      numberOfRooms: _numberOfRooms,
+      numberOfPersons: _numberOfPersons,
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Booking Successful',
+            style: mainTextStyle.copyWith(fontSize: 25),
+          ),
+          content: const Text(
+            'Your booking has been confirmed.',
+            style: secondaryTextStyle,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              child: const Text(
+                'Go Home',
+                style: regularTextStyle,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Ok',
+                style: regularTextStyle,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rezerv/components/hotelcard.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
+import 'package:rezerv/models/HotelModel.dart';
 import 'package:rezerv/screens/otherscreens/hoteldetails.dart';
+import 'package:rezerv/services/hotel.dart';
 
 class FilterHotelsPage extends StatefulWidget {
   @override
@@ -10,66 +12,60 @@ class FilterHotelsPage extends StatefulWidget {
 }
 
 class _FilterHotelsPageState extends State<FilterHotelsPage> {
+  final HotelServices _hotelServices = HotelServices();
+  List<HotelModel> _hotels = [];
+  bool _isLoading = true;
+
+  Future<void> _fetchHotels() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      List<HotelModel> hotels = await _hotelServices.getAllHotels();
+      setState(() {
+        _hotels = hotels;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching hotels: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   String? _selectedLocation;
   double _minPrice = 0;
   double _maxPrice = 1000;
   String _selectedSorting = 'Ascending';
 
-  List<String> _locations = ['Location A', 'Location B', 'Location C'];
-  // Sample locations
-  List<Map<String, dynamic>> _hotels = [
-    {
-      'imageUrl': 'assets/images/hotelimage.png',
-      'rating': 4.5,
-      'hotelName': 'Example Hotel',
-      'price': 120.0,
-      'location': 'Location A',
-    },
-    {
-      'imageUrl': 'assets/images/hotelimage.png',
-      'rating': 4.0,
-      'hotelName': 'Hotel B',
-      'price': 150.0,
-      'location': 'Location B',
-    },
-    {
-      'imageUrl': 'assets/images/hotelimage.png',
-      'rating': 4.0,
-      'hotelName': 'Hotel D',
-      'price': 150.0,
-      'location': 'Location B',
-    },
-    {
-      'imageUrl': 'assets/images/hotelimage.png',
-      'rating': 3.5,
-      'hotelName': 'Hotel C',
-      'price': 100.0,
-      'location': 'Location C',
-    },
-  ]; // Sample hotel data
+  List<String> _locations = [];
 
-  List<Map<String, dynamic>> _filteredHotels = [];
+  List<HotelModel> _filteredHotels = [];
 
   @override
   void initState() {
     super.initState();
+    _fetchHotels();
     _filteredHotels = List.from(_hotels);
   }
 
   void _applyFilters() {
     setState(() {
       _filteredHotels = _hotels.where((hotel) {
-        final double hotelPrice = hotel['price'];
-        final String hotelLocation = hotel['location'];
+        final double hotelPrice = hotel.pricePerNight;
+        final String hotelLocation = hotel.location;
         return (hotelPrice >= _minPrice &&
             hotelPrice <= _maxPrice &&
             (_selectedLocation == null || hotelLocation == _selectedLocation));
       }).toList();
 
       if (_selectedSorting == 'Ascending') {
-        _filteredHotels.sort((a, b) => a['price'].compareTo(b['price']));
+        _filteredHotels
+            .sort((a, b) => a.pricePerNight.compareTo(b.pricePerNight));
       } else {
-        _filteredHotels.sort((a, b) => b['price'].compareTo(a['price']));
+        _filteredHotels
+            .sort((a, b) => b.pricePerNight.compareTo(a.pricePerNight));
       }
     });
   }
@@ -105,7 +101,7 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
             ),
             const SizedBox(height: 5),
             Container(
-              height: 60, // Adjust the height here
+              height: 60,
               child: DropdownButtonFormField<String>(
                 value: _selectedLocation,
                 onChanged: (value) {
@@ -122,8 +118,7 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
                 }).toList(),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        100), // Adjust the border radius as needed
+                    borderRadius: BorderRadius.circular(100),
                   ),
                 ),
               ),
@@ -138,12 +133,11 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
               children: [
                 Expanded(
                   child: SizedBox(
-                    height: 50, // Adjust the height here
+                    height: 50,
                     child: Container(
-                      alignment: Alignment.center, // Center the text vertically
+                      alignment: Alignment.center,
                       child: TextFormField(
                         decoration: filterFormInputDecoration.copyWith(
-                          // Adjust the padding to center the text horizontally
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
                         ),
@@ -161,12 +155,11 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: SizedBox(
-                    height: 50, // Adjust the height here
+                    height: 50,
                     child: Container(
-                      alignment: Alignment.center, // Center the text vertically
+                      alignment: Alignment.center,
                       child: TextFormField(
                         decoration: filterFormInputDecoration.copyWith(
-                          // Adjust the padding to center the text horizontally
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
                         ),
@@ -190,7 +183,7 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
             ),
             const SizedBox(height: 5),
             Container(
-              height: 60, // Adjust the height here
+              height: 60,
               child: DropdownButtonFormField<String>(
                 value: _selectedSorting,
                 onChanged: (value) {
@@ -201,19 +194,17 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
                 },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        100), // Adjust the border radius as needed
+                    borderRadius: BorderRadius.circular(100),
                   ),
                 ),
                 items: ['Ascending', 'Descending'].map((sortOption) {
                   return DropdownMenuItem<String>(
                     value: sortOption,
                     child: Container(
-                      alignment: Alignment.center, // Center the text vertically
+                      alignment: Alignment.center,
                       child: Text(
                         sortOption,
-                        textAlign:
-                            TextAlign.center, // Center the text horizontally
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   );
@@ -230,26 +221,21 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
                   final hotel = _filteredHotels[index];
                   return GestureDetector(
                     onTap: () {
-                      // Navigate to HotelDetailsPage when a hotel card is tapped
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HotelDetailsPage(
-                              // imageUrl: hotel['imageUrl'],
-                              // rating: hotel['rating'],
-                              // hotelName: hotel['hotelName'],
-                              // price: hotel['price'],
-                              ),
+                          builder: (context) =>
+                              HotelDetailsPage(hotelId: hotel.id),
                         ),
                       );
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(right: 20.0),
                       child: HotelCard(
-                        imageUrl: hotel['imageUrl'],
-                        rating: hotel['rating'],
-                        hotelName: hotel['hotelName'],
-                        price: hotel['price'],
+                        imageUrl: hotel.imageUrl,
+                        rating: hotel.rating,
+                        hotelName: hotel.name,
+                        price: hotel.pricePerNight,
                       ),
                     ),
                   );
@@ -260,5 +246,13 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
         ),
       ),
     );
+  }
+
+  List<String> _getLocations() {
+    Set<String> locationsSet = Set();
+    for (var hotel in _hotels) {
+      locationsSet.add(hotel.location);
+    }
+    return locationsSet.toList();
   }
 }

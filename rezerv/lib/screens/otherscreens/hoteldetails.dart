@@ -1,115 +1,146 @@
 import 'package:flutter/material.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
+import 'package:rezerv/models/HotelModel.dart';
 import 'package:rezerv/screens/otherscreens/booking.dart';
+import 'package:rezerv/services/hotel.dart'; // Import the HotelServices class
 
 class HotelDetailsPage extends StatelessWidget {
+  final String hotelId; // Add this line
+
+  const HotelDetailsPage({required this.hotelId}); // Add this line
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              style: const ButtonStyle(
-                iconSize: MaterialStatePropertyAll(25.0),
-                iconColor: MaterialStatePropertyAll(white),
-                backgroundColor: MaterialStatePropertyAll(mainBlue),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+    return FutureBuilder<HotelModel?>(
+      future: HotelServices()
+          .getHotelById(hotelId), // Use getHotelById to fetch hotel details
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('Hotel not found'));
+        } else {
+          final hotel = snapshot.data!;
+
+          return Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    style: const ButtonStyle(
+                      iconSize: MaterialStatePropertyAll(25.0),
+                      iconColor: MaterialStatePropertyAll(white),
+                      backgroundColor: MaterialStatePropertyAll(mainBlue),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  expandedHeight: 200,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Image.asset(
+                      hotel.imageUrl, // Use the imageUrl from HotelModel
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    // Hotel rating
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.star, color: Colors.yellow),
+                          Text(
+                            hotel.rating.toString(),
+                            style: secondaryTextStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Hotel Name
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        hotel.name, // Use the name from HotelModel
+                        style: mainTextStyle,
+                      ),
+                    ),
+                    // Hotel description
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        hotel
+                            .description, // Use the description from HotelModel
+                        style: regularTextStyle,
+                      ),
+                    ),
+                    // Price per night
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Price per night: \$${hotel.pricePerNight.toString()}',
+                        style: secondaryTextStyle,
+                      ),
+                    ),
+                  ]),
+                ),
+              ],
             ),
-            expandedHeight: 200,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/images/hotelimage.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              // Hotel rating
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.star, color: Colors.yellow),
-                    Text('4.5', style: secondaryTextStyle),
+            // Book Hotel button at the bottom
+            floatingActionButton: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: Offset(0, 3),
+                    ),
                   ],
                 ),
-              ),
-              // Hotel Name
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'The Epitome',
-                  style: mainTextStyle,
-                ),
-              ),
-              // Hotel description
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor.',
-                  style: regularTextStyle,
-                ),
-              ),
-              // Price per night
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Price per night: \$100',
-                  style: secondaryTextStyle,
-                ),
-              ),
-            ]),
-          ),
-        ],
-      ),
-      // Book Hotel button at the bottom
-      floatingActionButton: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookingPage(),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookingPage(
+                              hotelId: hotelId,
+                              priceperNight: hotel.pricePerNight.toString(),
+                              hotelName: hotel.name,
+                              location: 'Colombo',
+                            ),
+                          ),
+                        );
+                      },
+                      label: Text(
+                        'Book Hotel',
+                        style: btnTextStyle.copyWith(color: white),
+                      ),
+                      backgroundColor: mainBlue,
                     ),
-                  );
-                },
-                label: Text(
-                  'Book Hotel',
-                  style: btnTextStyle.copyWith(color: white),
+                  ),
                 ),
-                backgroundColor: mainBlue,
               ),
             ),
-          ),
-        ),
-      ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          );
+        }
+      },
     );
   }
 }

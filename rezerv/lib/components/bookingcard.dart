@@ -9,7 +9,6 @@ class BookingCard extends StatelessWidget {
   final int numberOfRooms;
   final DateTime checkInDate;
   final DateTime checkOutDate;
-  final double totalAmount;
 
   BookingCard({
     required this.hotelName,
@@ -18,7 +17,6 @@ class BookingCard extends StatelessWidget {
     required this.numberOfRooms,
     required this.checkInDate,
     required this.checkOutDate,
-    required this.totalAmount,
   });
 
   @override
@@ -62,11 +60,6 @@ class BookingCard extends StatelessWidget {
               Text(
                 'Check-Out Date: ${DateFormat('dd MMM yyyy').format(checkOutDate)}',
                 style: regularTextStyle,
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Total Amount: \$${totalAmount.toStringAsFixed(2)}',
-                style: secondaryTextStyle,
               ),
             ],
           ),

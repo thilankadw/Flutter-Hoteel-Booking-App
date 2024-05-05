@@ -20,6 +20,9 @@ class _RegisterState extends State<Register> {
   //form key
   final _formKey = GlobalKey<FormState>();
 
+  String username = "";
+  String firstname = "";
+  String lastname = "";
   String email = "";
   String password = "";
   String error = "";
@@ -49,7 +52,7 @@ class _RegisterState extends State<Register> {
                     style: descriptionStyle,
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
@@ -57,6 +60,75 @@ class _RegisterState extends State<Register> {
                       key: _formKey,
                       child: Column(
                         children: [
+                          //username
+                          TextFormField(
+                            style: const TextStyle(color: bgBlack),
+                            decoration: inputFieldDecoration.copyWith(
+                                hintText: "Username"),
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Enter username.";
+                              }
+                              return null;
+                            },
+                            onChanged: (val) {
+                              print("Username: $val");
+                              setState(() {
+                                username = val;
+                              });
+                            },
+                          ),
+
+                          const SizedBox(
+                            height: 40,
+                          ),
+
+                          //fistname
+                          TextFormField(
+                            style: const TextStyle(color: bgBlack),
+                            decoration: inputFieldDecoration.copyWith(
+                                hintText: "First name"),
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Enter first name.";
+                              }
+                              return null;
+                            },
+                            onChanged: (val) {
+                              print("Username: $val");
+                              setState(() {
+                                firstname = val;
+                              });
+                            },
+                          ),
+
+                          const SizedBox(
+                            height: 40,
+                          ),
+
+                          //lastname
+                          TextFormField(
+                            style: const TextStyle(color: bgBlack),
+                            decoration: inputFieldDecoration.copyWith(
+                                hintText: "Last name"),
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Enter last name.";
+                              }
+                              return null;
+                            },
+                            onChanged: (val) {
+                              print("Username: $val");
+                              setState(() {
+                                lastname = val;
+                              });
+                            },
+                          ),
+
+                          const SizedBox(
+                            height: 40,
+                          ),
+
                           //email
                           TextFormField(
                             style: const TextStyle(color: bgBlack),
@@ -126,7 +198,12 @@ class _RegisterState extends State<Register> {
                             onTap: () async {
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
-                                      email, password);
+                                username,
+                                firstname,
+                                lastname,
+                                email,
+                                password,
+                              );
                               if (result == null) {
                                 setState(() {
                                   error = "Register error.";

@@ -12,16 +12,22 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     //user data by provider
     final user = Provider.of<UserModel?>(context);
+    print("user from wrapper");
+    print(user);
 
-    // if (user == null) {
-    //   return Authenticate();
-    // } else {
-    //   return Home();
-    // }
+    if (user != null) {
+      print("User ID: ${user.uid}");
+    }
+
     if (user == null) {
-      return Home();
+      return Authenticate();
     } else {
       return Home();
     }
+    // if (user == null) {
+    //   return Home();
+    // } else {
+    //   return Home();
+    // }
   }
 }

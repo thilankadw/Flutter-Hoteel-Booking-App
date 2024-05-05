@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
                     child: Column(
                       children: [
                         TextFormField(
-                          style: const TextStyle(color: white),
+                          style: const TextStyle(color: bgBlack),
                           decoration: inputFieldDecoration,
                           validator: (val) {
                             if (val!.isEmpty) {
@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
                           height: 40,
                         ),
                         TextFormField(
-                          style: const TextStyle(color: white),
+                          style: const TextStyle(color: bgBlack),
                           decoration: inputFieldDecoration.copyWith(
                               hintText: "Password"),
                           validator: (val) => val!.length < 6

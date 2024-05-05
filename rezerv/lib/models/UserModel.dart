@@ -1,6 +1,16 @@
-//create a user with UID
-
+// UserModel class representing user data
 class UserModel {
   final String uid;
-  UserModel({required this.uid});
+  final String username;
+  final String firstName;
+  final String lastName;
+  final String email;
+
+  UserModel({
+    required this.uid,
+    required this.username,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+  });
 }

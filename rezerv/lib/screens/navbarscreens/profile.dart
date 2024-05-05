@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
+import 'package:rezerv/models/UserModel.dart';
+import 'package:rezerv/services/auth.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -10,6 +12,26 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final AuthServices _auth = AuthServices();
+
+  late UserModel _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCurrentUser();
+  }
+
+  void _fetchCurrentUser() async {
+    UserModel? currentUser = await _auth.getCurrentUser();
+    if (currentUser != null) {
+      print(currentUser);
+      setState(() {
+        _user = currentUser;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,23 +58,23 @@ class _ProfileState extends State<Profile> {
             ),
             const SizedBox(height: 20.0),
             Text(
-              'Nissanka',
+              _user.username,
               style: mainTextStyle.copyWith(color: bgBlack),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40.0),
             Text(
-              'First Name: Pathum',
+              'First Name: ${_user.firstName}',
               style: btnTextStyle.copyWith(fontSize: 19),
             ),
             const SizedBox(height: 20.0),
             Text(
-              'Last Name: Nissanka',
+              'Last Name: ${_user.lastName}',
               style: btnTextStyle.copyWith(fontSize: 19),
             ),
             const SizedBox(height: 20.0),
             Text(
-              'Email: pathumnish18@gmail.com',
+              'Email: ${_user.email}',
               style: btnTextStyle.copyWith(fontSize: 19),
             ),
             const SizedBox(height: 50.0),
@@ -62,7 +84,9 @@ class _ProfileState extends State<Profile> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(mainBlue),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await _auth.LogOut();
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
