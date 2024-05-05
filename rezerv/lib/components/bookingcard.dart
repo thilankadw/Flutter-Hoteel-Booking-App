@@ -22,7 +22,7 @@ class BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity, // This makes the card width span the entire width
+      width: double.infinity,
       child: Card(
         elevation: 3,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

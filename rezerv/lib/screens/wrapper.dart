@@ -24,10 +24,5 @@ class Wrapper extends StatelessWidget {
     } else {
       return Home();
     }
-    // if (user == null) {
-    //   return Home();
-    // } else {
-    //   return Home();
-    // }
   }
 }

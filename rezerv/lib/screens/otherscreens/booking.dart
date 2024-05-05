@@ -3,7 +3,7 @@ import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
 import 'package:rezerv/models/UserModel.dart';
 import 'package:rezerv/services/auth.dart';
-import 'package:rezerv/services/booking.dart'; // Import the BookingServices class
+import 'package:rezerv/services/booking.dart';
 
 class BookingPage extends StatefulWidget {
   final String hotelId;
@@ -68,15 +68,13 @@ class _BookingPageState extends State<BookingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Hotel Name and Price per night
-                // Replace 'Hotel Name' and '\$100' with actual values
                 Text(
                   'Hotel Name',
                   style: secondaryTextStyle.copyWith(fontSize: 25),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Price per night: \$${widget.priceperNight}', // Replace with actual price
+                  'Price per night: \$${widget.priceperNight}',
                   style: regularTextStyle,
                 ),
                 const SizedBox(height: 40),
@@ -116,7 +114,6 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                 ),
                 SizedBox(height: 40),
-                // Number of Persons Dropdown
                 const Text(
                   'Number of Persons',
                   style: secondaryTextStyle,
@@ -164,7 +161,6 @@ class _BookingPageState extends State<BookingPage> {
                   }),
                 ),
                 SizedBox(height: 40),
-                // Add Booking Button
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(

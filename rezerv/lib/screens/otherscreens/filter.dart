@@ -15,6 +15,14 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
   final HotelServices _hotelServices = HotelServices();
   List<HotelModel> _hotels = [];
   bool _isLoading = true;
+  String? _selectedLocation;
+  double _minPrice = 0;
+  double _maxPrice = 1000;
+  String _selectedSorting = 'Ascending';
+
+  List<String> _locations = [];
+
+  List<HotelModel> _filteredHotels = [];
 
   Future<void> _fetchHotels() async {
     setState(() {
@@ -24,6 +32,7 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
       List<HotelModel> hotels = await _hotelServices.getAllHotels();
       setState(() {
         _hotels = hotels;
+        _locations = _getLocations();
         _isLoading = false;
       });
     } catch (e) {
@@ -33,15 +42,6 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
       });
     }
   }
-
-  String? _selectedLocation;
-  double _minPrice = 0;
-  double _maxPrice = 1000;
-  String _selectedSorting = 'Ascending';
-
-  List<String> _locations = [];
-
-  List<HotelModel> _filteredHotels = [];
 
   @override
   void initState() {
@@ -162,6 +162,7 @@ class _FilterHotelsPageState extends State<FilterHotelsPage> {
                         decoration: filterFormInputDecoration.copyWith(
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
+                          hintText: 'Max Price',
                         ),
                         keyboardType: TextInputType.number,
                         onChanged: (value) {

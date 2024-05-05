@@ -62,13 +62,17 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
               Center(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: Colors.blue,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      10.0,
+                    ),
                   ),
-                  height: 120,
-                  width: double.infinity,
-                  child: SizedBox(),
+                  child: Image.asset(
+                    'assets/images/banner_image.png',
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -95,16 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: _hotels.length,
                             itemBuilder: (BuildContext context, int index) {
                               final hotel = _hotels[index];
-                              print("=====current hotel=====");
-                              print(hotel.id);
                               return GestureDetector(
                                 onTap: () {
-                                  // Navigate to HotelDetailsPage when a hotel card is tapped
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HotelDetailsPage(
-                                          hotelId: "QF5pkiG2SHq4G6rLK81E"),
+                                      builder: (context) =>
+                                          HotelDetailsPage(hotelId: hotel.id),
                                     ),
                                   );
                                 },

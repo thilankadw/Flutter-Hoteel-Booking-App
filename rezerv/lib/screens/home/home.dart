@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //create a obj from AuthService
   final AuthServices _auth = AuthServices();
 
   int _currentIndex = 0;

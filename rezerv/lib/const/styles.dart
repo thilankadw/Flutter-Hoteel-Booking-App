@@ -67,8 +67,7 @@ const InputDecoration filterFormInputDecoration = InputDecoration(
     fontFamily: 'PoppinsRegular',
   ),
   fillColor: white,
-  contentPadding:
-      EdgeInsets.symmetric(vertical: 10.0), // Adjust the height here
+  contentPadding: EdgeInsets.symmetric(vertical: 10.0),
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: bgBlack, width: 1),
     borderRadius: BorderRadius.all(

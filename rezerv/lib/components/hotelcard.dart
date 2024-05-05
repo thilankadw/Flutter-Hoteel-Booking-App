@@ -38,10 +38,6 @@ class HotelCard extends StatelessWidget {
                   imageUrl,
                   fit: BoxFit.cover,
                 ),
-                // child: Image.network(
-                //   imageUrl,
-                //   fit: BoxFit.cover,
-                // ),
               ),
               const SizedBox(
                 height: 10.0,
@@ -74,7 +70,7 @@ class HotelCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: SizedBox(
-                  height: 50, // Set your desired height here
+                  height: 50,
                   child: Text(
                     hotelName,
                     style: secondaryTextStyle,

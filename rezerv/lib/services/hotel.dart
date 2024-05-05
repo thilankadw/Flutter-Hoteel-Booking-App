@@ -22,9 +22,6 @@ class HotelServices {
             location: doc['location']));
       });
 
-      print("=====Hotel List=====");
-      print(hotels);
-
       return hotels;
     } catch (e) {
       print("Error getting all hotels: $e");
@@ -32,16 +29,12 @@ class HotelServices {
     }
   }
 
-  // Get hotel by document ID
   Future<HotelModel?> getHotelById(String id) async {
     try {
       DocumentSnapshot docSnapshot =
           await _firestore.collection('hotels').doc(id).get();
 
       if (docSnapshot.exists) {
-        print("====== Hotel data ======");
-        print(docSnapshot);
-
         return HotelModel(
             id: docSnapshot.id,
             name: docSnapshot['name'],

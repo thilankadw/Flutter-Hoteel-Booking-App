@@ -1,4 +1,3 @@
-// UserModel class representing user data
 class UserModel {
   final String uid;
   final String username;

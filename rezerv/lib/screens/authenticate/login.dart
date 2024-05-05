@@ -25,7 +25,6 @@ class _LoginState extends State<Login> {
     return Scaffold(
       backgroundColor: white,
       body: Center(
-        // Wrap the content with Center widget
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -63,8 +62,6 @@ class _LoginState extends State<Login> {
                             if (val!.isEmpty) {
                               return "Enter an email address.";
                             }
-
-                            // Using RegExp for a valid email format
                             RegExp emailRegex = RegExp(
                               r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
                             );

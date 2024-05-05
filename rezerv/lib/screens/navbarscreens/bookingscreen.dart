@@ -21,7 +21,6 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
-    print("====================");
     _fetchBookings();
   }
 

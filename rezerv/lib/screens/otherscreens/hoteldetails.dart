@@ -3,18 +3,17 @@ import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
 import 'package:rezerv/models/HotelModel.dart';
 import 'package:rezerv/screens/otherscreens/booking.dart';
-import 'package:rezerv/services/hotel.dart'; // Import the HotelServices class
+import 'package:rezerv/services/hotel.dart';
 
 class HotelDetailsPage extends StatelessWidget {
-  final String hotelId; // Add this line
+  final String hotelId;
 
-  const HotelDetailsPage({required this.hotelId}); // Add this line
+  const HotelDetailsPage({required this.hotelId});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<HotelModel?>(
-      future: HotelServices()
-          .getHotelById(hotelId), // Use getHotelById to fetch hotel details
+      future: HotelServices().getHotelById(hotelId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -43,7 +42,7 @@ class HotelDetailsPage extends StatelessWidget {
                   expandedHeight: 200,
                   flexibleSpace: FlexibleSpaceBar(
                     background: Image.asset(
-                      hotel.imageUrl, // Use the imageUrl from HotelModel
+                      hotel.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -68,7 +67,7 @@ class HotelDetailsPage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Text(
-                        hotel.name, // Use the name from HotelModel
+                        hotel.name,
                         style: mainTextStyle,
                       ),
                     ),
@@ -76,8 +75,7 @@ class HotelDetailsPage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Text(
-                        hotel
-                            .description, // Use the description from HotelModel
+                        hotel.description,
                         style: regularTextStyle,
                       ),
                     ),
@@ -93,7 +91,6 @@ class HotelDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            // Book Hotel button at the bottom
             floatingActionButton: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Container(

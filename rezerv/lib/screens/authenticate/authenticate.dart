@@ -12,7 +12,6 @@ class Authenticate extends StatefulWidget {
 class _AuthenticateState extends State<Authenticate> {
   bool loginPage = true;
 
-  //toggle pages
   void switchPages() {
     setState(() {
       loginPage = !loginPage;

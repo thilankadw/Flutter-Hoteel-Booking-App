@@ -31,7 +31,6 @@ class BookingServices {
     }
   }
 
-  // Get all bookings for a user
   Future<List<BookingModel>> getAllBookingsForUser(String userId) async {
     List<BookingModel> bookings = [];
 
