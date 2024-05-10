@@ -14,7 +14,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  //ref for the AuthServices class
   final AuthServices _auth = AuthServices();
 
   //form key

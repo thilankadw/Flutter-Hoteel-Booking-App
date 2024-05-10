@@ -4,7 +4,7 @@ import 'package:rezerv/models/BookingModel.dart';
 class BookingServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> createBooking({
+  Future<String> createBooking({
     required String userId,
     required String hotelId,
     required String hotelName,
@@ -13,9 +13,11 @@ class BookingServices {
     required DateTime checkOutDate,
     required int numberOfRooms,
     required int numberOfPersons,
+    required bool addPickupVehicle,
   }) async {
     try {
-      await _firestore.collection('bookings').add({
+      DocumentReference bookingRef =
+          await _firestore.collection('bookings').add({
         'userId': userId,
         'hotelId': hotelId,
         'hotelName': hotelName,
@@ -24,10 +26,13 @@ class BookingServices {
         'checkOutDate': checkOutDate,
         'numberOfRooms': numberOfRooms,
         'numberOfPersons': numberOfPersons,
+        'addPickupVehicle': addPickupVehicle,
         'timestamp': FieldValue.serverTimestamp(),
       });
+      return bookingRef.id;
     } catch (e) {
       print("Error creating booking: $e");
+      throw e;
     }
   }
 

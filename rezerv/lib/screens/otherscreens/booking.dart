@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
 import 'package:rezerv/models/UserModel.dart';
+import 'package:rezerv/screens/otherscreens/payment.dart';
 import 'package:rezerv/services/auth.dart';
 import 'package:rezerv/services/booking.dart';
 
@@ -27,6 +28,7 @@ class _BookingPageState extends State<BookingPage> {
   DateTime? _checkOutDate;
   int _numberOfPersons = 1;
   int _numberOfRooms = 1;
+  bool _addPickupVehicle = false;
 
   late String _userId;
 
@@ -69,7 +71,7 @@ class _BookingPageState extends State<BookingPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Hotel Name',
+                  '${widget.hotelName}',
                   style: secondaryTextStyle.copyWith(fontSize: 25),
                 ),
                 const SizedBox(height: 10),
@@ -160,7 +162,32 @@ class _BookingPageState extends State<BookingPage> {
                     );
                   }),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      activeColor: mainBlue,
+                      value: _addPickupVehicle, // Step 2: Checkbox widget
+                      onChanged: (value) {
+                        setState(() {
+                          _addPickupVehicle =
+                              value ?? false; // Step 3: Update state
+                        });
+                      },
+                    ),
+                    const Text(
+                      'Add Pickup Vehicle', // Step 2: Text label
+                      style: regularTextStyle,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Total: \$${_calculateTotal().toStringAsFixed(2)}',
+                  style: secondaryTextStyle,
+                ),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -240,52 +267,94 @@ class _BookingPageState extends State<BookingPage> {
     }
   }
 
-  void _addBooking() {
-    BookingServices().createBooking(
-      userId: _userId,
-      hotelId: widget.hotelId,
-      hotelName: widget.hotelName,
-      location: widget.location,
-      checkInDate: _checkInDate!,
-      checkOutDate: _checkOutDate!,
-      numberOfRooms: _numberOfRooms,
-      numberOfPersons: _numberOfPersons,
-    );
+  void _addBooking() async {
+    if (_checkInDate == null || _checkOutDate == null) {
+      // If either check-in or check-out date is not selected, show a notification
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: mainBlue,
+          content: Text(
+            'Please select both check-in and check-out dates.',
+            style: regularTextStyle.copyWith(color: white),
+          ),
+          duration:
+              Duration(seconds: 2), // You can adjust the duration as needed
+        ),
+      );
+      return; // Return without proceeding further
+    }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Booking Successful',
-            style: mainTextStyle.copyWith(fontSize: 25),
-          ),
-          content: const Text(
-            'Your booking has been confirmed.',
-            style: secondaryTextStyle,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-              child: const Text(
-                'Go Home',
-                style: regularTextStyle,
-              ),
+    String pickupVehicleInfo =
+        _addPickupVehicle ? 'Pickup Vehicle Added' : 'No Pickup Vehicle';
+
+    try {
+      // Create the booking in Firebase and get the document ID
+      String bookingId = await BookingServices().createBooking(
+        userId: _userId,
+        hotelId: widget.hotelId,
+        hotelName: widget.hotelName,
+        location: widget.location,
+        checkInDate: _checkInDate!,
+        checkOutDate: _checkOutDate!,
+        numberOfRooms: _numberOfRooms,
+        numberOfPersons: _numberOfPersons,
+        addPickupVehicle: _addPickupVehicle, // Pass pickup information
+      );
+
+      // Navigate to the card details screen, passing the booking ID
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CardDetailsScreen(bookingId: bookingId),
+        ),
+      );
+    } catch (e) {
+      // Handle any errors that occur during booking creation
+      print('Error creating booking: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Error',
+              style: mainTextStyle.copyWith(fontSize: 25),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Ok',
-                style: regularTextStyle,
-              ),
+            content: Text(
+              'An error occurred while processing your booking. Please try again later.',
+              style: secondaryTextStyle,
             ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Ok',
+                  style: regularTextStyle,
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  double _calculateTotal() {
+    if (_checkInDate == null || _checkOutDate == null) {
+      return 0.0;
+    }
+
+    int numberOfNights = _checkOutDate!.difference(_checkInDate!).inDays;
+    double pricePerNight = double.parse(widget.priceperNight);
+    double totalWithoutExtras = numberOfNights * pricePerNight * _numberOfRooms;
+    double total = totalWithoutExtras;
+
+    if (_addPickupVehicle) {
+      double pickupVehicleCost = 50.0;
+      total += pickupVehicleCost;
+    }
+
+    return total;
   }
 }
