@@ -2,6 +2,7 @@ import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/screens/navbarscreens/bookingscreen.dart';
 import 'package:rezerv/screens/navbarscreens/homescree.dart';
 import 'package:rezerv/screens/navbarscreens/profile.dart';
+import 'package:rezerv/screens/navbarscreens/vehicles.dart';
 import 'package:rezerv/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _HomeState extends State<Home> {
   List<Widget> body = const [
     HomeScreen(),
     BookingScreen(),
+    VehicleScreen(),
     Profile(),
   ];
 
@@ -63,6 +65,12 @@ class _HomeState extends State<Home> {
             label: 'Bookings',
             icon: Icon(
               Icons.book_online,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Vehicles',
+            icon: Icon(
+              Icons.car_rental,
             ),
           ),
           BottomNavigationBarItem(

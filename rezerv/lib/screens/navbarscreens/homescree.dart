@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rezerv/components/hotelcard.dart';
+import 'package:rezerv/components/vehiclecadr.dart';
 import 'package:rezerv/models/HotelModel.dart';
+import 'package:rezerv/models/VehicleModel.dart';
 import 'package:rezerv/screens/otherscreens/filter.dart';
 import 'package:rezerv/screens/otherscreens/hoteldetails.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
+import 'package:rezerv/screens/otherscreens/vehiclebooking.dart';
+import 'package:rezerv/services/getvehicles.dart';
 import 'package:rezerv/services/hotel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,8 +20,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final HotelServices _hotelServices = HotelServices();
+  final VehicleServices _vehicleServices = VehicleServices();
+
   List<HotelModel> _hotels = [];
   bool _isLoading = true;
+
+  List<VehicleModel> _vehicles = [];
 
   @override
   void initState() {
@@ -34,6 +42,25 @@ class _HomeScreenState extends State<HomeScreen> {
       List<HotelModel> hotels = await _hotelServices.getAllHotels();
       setState(() {
         _hotels = hotels;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching hotels: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchVehicles() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      List<VehicleModel> vehicles = await _vehicleServices.getAllVehicles();
+      setState(() {
+        _vehicles = vehicles;
         _isLoading = false;
       });
     } catch (e) {
@@ -116,6 +143,54 @@ class _HomeScreenState extends State<HomeScreen> {
                                     rating: hotel.rating,
                                     hotelName: hotel.name,
                                     price: hotel.pricePerNight,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                "Vehicles",
+                style: mainTextStyle,
+              ),
+              Container(
+                height: 320,
+                child: _isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : _vehicles.isEmpty
+                        ? const Center(
+                            child: Text(
+                              'No vehicles found',
+                              style: secondaryTextStyle,
+                            ),
+                          )
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _vehicles.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final vehicle = _vehicles[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VehicleBookingPage(
+                                        vehicleId: vehicle.id,
+                                        price: vehicle.price,
+                                        model: vehicle.model,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 20.0),
+                                  child: VehicleCard(
+                                    imageUrl: vehicle.imageUrl,
+                                    model: vehicle.model,
+                                    price: vehicle.price,
                                   ),
                                 ),
                               );
