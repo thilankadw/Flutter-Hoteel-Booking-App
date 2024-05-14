@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
 import 'package:rezerv/models/UserModel.dart';
+import 'package:rezerv/screens/wrapper.dart';
 import 'package:rezerv/services/auth.dart';
 
 class Profile extends StatefulWidget {
@@ -86,6 +87,9 @@ class _ProfileState extends State<Profile> {
                 ),
                 onPressed: () async {
                   await _auth.LogOut();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const Wrapper()),
+                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
