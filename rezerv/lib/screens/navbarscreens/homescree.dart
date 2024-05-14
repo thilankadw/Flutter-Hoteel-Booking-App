@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchHotels();
+    _fetchVehicles();
   }
 
   Future<void> _fetchHotels() async {
@@ -61,13 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
       List<VehicleModel> vehicles = await _vehicleServices.getAllVehicles();
       setState(() {
         _vehicles = vehicles;
-        _isLoading = false;
       });
     } catch (e) {
       print('Error fetching hotels: $e');
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() {});
     }
   }
 
@@ -106,6 +104,37 @@ class _HomeScreenState extends State<HomeScreen> {
               const Text(
                 "Hotels",
                 style: mainTextStyle,
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 60,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(mainBlue),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilterHotelsPage(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.filter_alt,
+                        color: white,
+                      ),
+                      const SizedBox(width: 15),
+                      Text(
+                        "Filter Hotels",
+                        style: btnTextStyle.copyWith(color: white),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               Container(
@@ -156,78 +185,45 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 height: 320,
-                child: _isLoading
+                child: _vehicles.isEmpty
                     ? const Center(
-                        child: CircularProgressIndicator(),
+                        child: Text(
+                          'No vehicles found',
+                          style: secondaryTextStyle,
+                        ),
                       )
-                    : _vehicles.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No vehicles found',
-                              style: secondaryTextStyle,
-                            ),
-                          )
-                        : ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _vehicles.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final vehicle = _vehicles[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => VehicleBookingPage(
-                                        vehicleId: vehicle.id,
-                                        price: vehicle.price,
-                                        model: vehicle.model,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: VehicleCard(
-                                    imageUrl: vehicle.imageUrl,
-                                    model: vehicle.model,
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _vehicles.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final vehicle = _vehicles[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VehicleBookingPage(
+                                    vehicleId: vehicle.id,
                                     price: vehicle.price,
+                                    model: vehicle.model,
+                                    vehicleNo: vehicle.vehicleNo,
                                   ),
                                 ),
                               );
                             },
-                          ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: VehicleCard(
+                                imageUrl: vehicle.imageUrl,
+                                model: vehicle.model,
+                                price: vehicle.price,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
-              const SizedBox(height: 40),
-              SizedBox(
-                height: 60,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(mainBlue),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FilterHotelsPage(),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.filter_alt,
-                        color: white,
-                      ),
-                      const SizedBox(width: 15),
-                      Text(
-                        "Filter Hotels",
-                        style: btnTextStyle.copyWith(color: white),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

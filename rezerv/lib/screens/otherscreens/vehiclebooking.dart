@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rezerv/const/colors.dart';
 import 'package:rezerv/const/styles.dart';
 import 'package:rezerv/models/UserModel.dart';
+import 'package:rezerv/screens/home/home.dart';
 import 'package:rezerv/screens/navbarscreens/homescree.dart';
 import 'package:rezerv/screens/otherscreens/payment.dart';
 import 'package:rezerv/services/auth.dart';
@@ -12,11 +13,13 @@ class VehicleBookingPage extends StatefulWidget {
   final String vehicleId;
   final double price;
   final String model;
+  final String vehicleNo;
 
   const VehicleBookingPage({
     required this.vehicleId,
     required this.price,
     required this.model,
+    required this.vehicleNo,
   });
 
   @override
@@ -211,17 +214,17 @@ class _VehicleBookingPageState extends State<VehicleBookingPage> {
         vehicleId: widget.vehicleId,
         startDate: _startDate!,
         endDate: _endDate!,
+        model: widget.model,
+        price: widget.price,
+        vehicleNo: widget.vehicleNo,
       );
-
-      // Navigate to the card details screen, passing the booking ID
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => Home(),
         ),
       );
     } catch (e) {
-      // Handle any errors that occur during booking creation
       print('Error creating booking: $e');
       showDialog(
         context: context,

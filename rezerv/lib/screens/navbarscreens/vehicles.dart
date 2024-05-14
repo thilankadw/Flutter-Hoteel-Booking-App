@@ -41,9 +41,12 @@ class _VehicleScreenState extends State<VehicleScreen> {
             await _bookingServices.getAllVehicleBookingsForUser(user.uid);
         List<VehicleBookingCard> bookings = userBookings.map((booking) {
           return VehicleBookingCard(
-            vehicleId: booking.vehicleId, // Correct parameter name
-            startDate: booking.startDate, // Correct parameter name
+            vehicleId: booking.vehicleId,
+            startDate: booking.startDate,
             endDate: booking.endDate,
+            model: booking.model,
+            price: booking.price,
+            vehicleNo: booking.vehicleNo,
           );
         }).toList();
 
@@ -69,7 +72,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Your Bookings',
+          'Your Vehicle Bookings',
           style: mainTextStyle,
         ),
       ),
@@ -80,7 +83,7 @@ class _VehicleScreenState extends State<VehicleScreen> {
           : _bookings.isEmpty
               ? const Center(
                   child: Text(
-                    'No bookings found',
+                    'No vehicle bookings found',
                     style: secondaryTextStyle,
                   ),
                 )
@@ -94,6 +97,9 @@ class _VehicleScreenState extends State<VehicleScreen> {
                                 vehicleId: vehicle.vehicleId,
                                 startDate: vehicle.startDate,
                                 endDate: vehicle.endDate,
+                                model: vehicle.model,
+                                price: vehicle.price,
+                                vehicleNo: vehicle.vehicleNo,
                               ))
                           .toList(),
                     ),

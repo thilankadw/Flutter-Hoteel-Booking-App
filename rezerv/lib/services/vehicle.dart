@@ -10,6 +10,9 @@ class VehicleBookingServices {
     required String vehicleId,
     required DateTime startDate,
     required DateTime endDate,
+    required String model,
+    required double price,
+    required String vehicleNo,
   }) async {
     try {
       DocumentReference bookingRef =
@@ -18,6 +21,9 @@ class VehicleBookingServices {
         'vehicleId': vehicleId,
         'startDate': startDate,
         'endDate': endDate,
+        'model': model,
+        'price': price,
+        'vehicleNo': vehicleNo,
         'timestamp': FieldValue.serverTimestamp(),
       });
       return bookingRef.id;
@@ -41,9 +47,12 @@ class VehicleBookingServices {
         vehiclebookings.add(VehicleBooking(
           id: doc.id,
           userId: doc['userId'],
-          vehicleId: doc['hotelId'],
-          startDate: doc['hotelName'],
-          endDate: doc['location'],
+          vehicleId: doc['vehicleId'],
+          startDate: (doc['startDate'] as Timestamp).toDate(),
+          endDate: (doc['endDate'] as Timestamp).toDate(),
+          model: doc['model'],
+          price: doc['price'],
+          vehicleNo: doc['model'],
         ));
       });
 

@@ -4,6 +4,9 @@ class VehicleBooking {
   final String vehicleId;
   final DateTime startDate;
   final DateTime endDate;
+  final String model;
+  final double price;
+  final String vehicleNo;
 
   VehicleBooking({
     required this.id,
@@ -11,5 +14,8 @@ class VehicleBooking {
     required this.vehicleId,
     required this.startDate,
     required this.endDate,
+    required this.model,
+    required this.price,
+    required this.vehicleNo,
   });
 }

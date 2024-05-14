@@ -1,3 +1,4 @@
+import 'package:rezerv/screens/home/home.dart';
 import 'package:rezerv/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -195,18 +196,27 @@ class _RegisterState extends State<Register> {
 
                           GestureDetector(
                             onTap: () async {
-                              dynamic result =
-                                  await _auth.registerWithEmailAndPassword(
-                                username,
-                                firstname,
-                                lastname,
-                                email,
-                                password,
-                              );
-                              if (result == null) {
-                                setState(() {
-                                  error = "Register error.";
-                                });
+                              if (_formKey.currentState!.validate()) {
+                                dynamic result =
+                                    await _auth.registerWithEmailAndPassword(
+                                  username,
+                                  firstname,
+                                  lastname,
+                                  email,
+                                  password,
+                                );
+                                if (result != null) {
+                                  // Navigate to home screen
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Home()),
+                                  );
+                                } else {
+                                  setState(() {
+                                    error = "Register error.";
+                                  });
+                                }
                               }
                             },
                             child: Container(

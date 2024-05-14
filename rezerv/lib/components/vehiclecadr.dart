@@ -46,7 +46,7 @@ class VehicleCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\$$price/night',
+                      '\$$price/km',
                       style: secondaryTextStyle.copyWith(fontSize: 16),
                     ),
                   ],

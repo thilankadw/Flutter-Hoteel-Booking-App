@@ -6,11 +6,17 @@ class VehicleBookingCard extends StatelessWidget {
   final String vehicleId;
   final DateTime startDate;
   final DateTime endDate;
+  final String vehicleNo;
+  final String model;
+  final double price;
 
   VehicleBookingCard({
     required this.vehicleId,
     required this.startDate,
     required this.endDate,
+    required this.model,
+    required this.price,
+    required this.vehicleNo,
   });
 
   @override
@@ -27,7 +33,7 @@ class VehicleBookingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                vehicleId,
+                vehicleNo,
                 style: secondaryTextStyle,
               ),
               const SizedBox(height: 5),
@@ -38,6 +44,16 @@ class VehicleBookingCard extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 'End Date: ${DateFormat('dd MMM yyyy').format(endDate)}',
+                style: regularTextStyle,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Model: ${model}',
+                style: regularTextStyle,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Price: \$${price}',
                 style: regularTextStyle,
               ),
             ],
